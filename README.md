@@ -21,3 +21,5 @@ Day 8 :heavy_check_mark:
 Day 9 :heavy_check_mark:
 
 Day 10 :five: :zero: / :five: :zero: - Part 2 runs forever recursively and I can't get it done iteratively :sob: :sob:
+
+Day 11 :heavy_check_mark:
