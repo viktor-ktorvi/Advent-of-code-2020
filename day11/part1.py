@@ -14,7 +14,7 @@ def seat_is_occupied(seat):
 
 def get_local_neighbourhood(i, r, limit):
     ln = list(range(-r, r + 1))
-    ln = [x + i for x in ln if 0 <= x + i < limit]
+    ln = [x + i for x in ln if 0 <= x + i < limit]  # no overflow
 
     return ln
 
@@ -31,7 +31,7 @@ def count_occupied_seats(seats, row, col):
     occupied_count = 0
     for i in adjacent_i:
         for j in adjacent_j:
-            if i == row and j == col:
+            if i == row and j == col:  # skip the cental seat
                 continue
             else:
                 if seat_is_occupied(seats[i][j]):
@@ -73,6 +73,8 @@ def apply_rules(seats):
     width = len(seats[0])
 
     seats_copy = copy.deepcopy(seats)
+
+    # apply rules all at once, not seat by seat
 
     for row in range(height):
         for col in range(width):
