@@ -1,82 +1,52 @@
-from collections import Counter
+def explore_graph(ways_to_get_there, j):
+    suma = 0
+    for k in range(ways_to_get_there[j]):
+        assert j - k - 1 >= 0
+        if ways_to_get_there[j - k - 1] == 1:
+            suma += 1
+        else:
+            suma += explore_graph(ways_to_get_there, j - k - 1)
 
-
-def findArrangementsRecursive(adapters, previous, all_arrangements):
-    previous.append(adapters[0])
-    if len(adapters) == 1:
-        all_arrangements.append(previous)
-        return
-    for j in range(1, len(adapters)):
-        if abs(adapters[j] - adapters[0]) <= 3:
-            findArrangementsRecursive(adapters[j:], list(previous), all_arrangements)
-
-
-def findPossibilities(adapters, i):
-    possibilities = []
-    for j in range(1, len(adapters) - i):
-        if abs(adapters[i] - adapters[i + j]) <= 3:
-            possibilities.append(j)
-
-    return possibilities
+    return suma
 
 
 if __name__ == "__main__":
-    f = open("adapters_my_input.txt")
+    f = open('adapters_my_input.txt')
     adapter_list = f.read()
     f.close()
-    # adapter_list = input()
+
     adapters = [int(x) for x in adapter_list.split("\n")]
     adapters.append(0)
     adapters.sort()
     adapters.append(adapters[-1] + 3)
 
-    all_arrangements = []
-    # findArrangementsRecursive(adapters, [], all_arrangements)
+    ways_to_get_there = [0] * len(adapters)
+    ways_to_get_there[0] = 1
 
-    print(adapters)
+    for i in range(len(adapters)):
+        for j in range(i + 1, len(adapters)):
+            if adapters[j] - adapters[i] <= 3:
+                ways_to_get_there[j] += 1
 
-    i = 1
-    context = [adapters[0]]
+    print('{:10}{:10}'.format('adapter', 'ways to get there'))
+    for i in range(len(adapters)):
+        print('{:10d}{:10d}'.format(adapters[i], ways_to_get_there[i]))
 
-    context_stack = []
-    i_stack = []
-    possibilities_count = [-1] * len(adapters)
+    distinct_ways = 1
+    for i in range(len(adapters)):
+        if i + 2 < len(ways_to_get_there):
+            if ways_to_get_there[i] == 1 and ways_to_get_there[i + 1] == 1 and ways_to_get_there[i + 2] != 1:
 
-    counter = 0
-    while True:
-        if possibilities_count[i] == 0:
-            possibilities_count[i] = -1
-            if not context_stack:
-                break
-            context = context_stack.pop()
-            i = i_stack.pop()
-            context.pop()
-            continue
+                for j in range(i + 2, len(ways_to_get_there)):
+                    assert j + 1 < len(ways_to_get_there)
+                    if ways_to_get_there[j + 1] == 1:
+                        break
 
+                # do stuff
+                # print(adapters[i], adapters[j])
 
-        context.append(adapters[i])
-        # print(context)
-        possibilities = findPossibilities(adapters, i)
+                # print(explore_graph(ways_to_get_there, j))
 
-        if len(possibilities) > 1:
-            context_stack.append(list(context))
-            i_stack.append(i)
+                distinct_ways *= explore_graph(ways_to_get_there, j)
 
-            if possibilities_count[i] == -1:
-                possibilities_count[i] = len(possibilities)
-
-            j = i
-            i += possibilities[possibilities_count[i] - 1]
-            possibilities_count[j] -= 1
-
-        else:
-            i += 1
-
-        if context[-1] == adapters[-1]:
-            # print(context)
-            counter += 1
-            context = context_stack.pop()
-            i = i_stack.pop()
-            context.pop()
-
-    print("There are %d arrangements" % counter)
+    print('Total number of distinct ways is {:d}'.format(distinct_ways))
