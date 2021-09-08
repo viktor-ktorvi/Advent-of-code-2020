@@ -5,6 +5,7 @@ if __name__ == '__main__':
 
     instructions = instructions_str.split('\n')
     mask = None
+    mask_low2high = None
     memory = {}
     for instruction in instructions:
         tokens = instruction.split()
