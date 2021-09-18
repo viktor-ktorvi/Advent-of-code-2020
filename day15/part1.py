@@ -6,7 +6,7 @@ if __name__ == '__main__':
     numbers = numbers_str.split(',')
     numbers = [int(n) for n in numbers]
     numbers_dict = {}
-    N = 30000000
+    N = 30000000    # part 2
 
     for i in range(len(numbers)):
         numbers_dict[numbers[i]] = i + 1
